@@ -1,0 +1,31 @@
+
+ 
+ 
+
+
+rd.break方法：
+1、启动的时候，在启动界面，相应启动项，内核名称上按“e”；
+2、进入后，找到linux16开头的地方，按“end”键到最后，
+输入rd.break   console=tty0 按ctrl+x进入；
+tty0表示当前终端
+3、进去后输入命令mount，发现根为/sysroot/，并且不能写，只有ro=readonly权限；
+4、mount -o remount,rw  /sysroot/
+，重新挂载，之后mount，发现有了r,w权限；
+5、chroot /sysroot/ 改变根；变成sh-4.2#
+（1）echo ‘RedHat’|  passwd –stdin root 修改root密码为redhat，或者输入passwd，交互修改；
+6、touch /.autorelabel 这句是为了selinux生效，为整个文件系统重新创建安全标签。如果之前系统启用了selinux，必须运行以下命令，否则将无法正常启动系统。
+7、exit
+8、reboot
+
+
+  我们的Linux系统在无法启动时候，通常需要进入单用户模式（恢复模式）下进行修改一些配置文件，或调整一些参数方可。但是在进入单用户模式后，我们的/文件系统是只读模式，无法进行修改，那么这个时候我们就需要用到一条命令：
+mount  –o  remount,rw   /sysroot
+这个命令来让我们的/路径文件系统为可读写模式，这样就可以实现自由修改了。
+
+-o options 主要用来描述设备或档案的挂接方式。常用的参数有：
+　　loop：用来把一个文件当成硬盘分区挂接上系统
+　　ro：采用只读方式挂接设备
+　　rw：采用读写方式挂接设备
+　　iocharset：指定访问文件系统所用字符集
+　
+
